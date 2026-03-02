@@ -51,7 +51,7 @@ export default function Navbar() {
     const handleLogout = () => {
         document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         fetch("/api/auth/logout", { method: "POST" }).finally(() => {
-            window.location.href = "/login";
+            window.location.href = "/";
         });
     };
 
@@ -111,8 +111,8 @@ export default function Navbar() {
                                 key={item.href}
                                 href={item.href}
                                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${pathname === item.href
-                                        ? "bg-blue-50 text-blue-700"
-                                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                                    ? "bg-blue-50 text-blue-700"
+                                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                                     }`}
                             >
                                 {item.label}
