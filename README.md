@@ -230,3 +230,18 @@ smartcare/
 │   └── requirements.txt
 └── README.md
 ```
+
+---
+
+## Frostbyte Hackathon Submission Details
+
+- **Project Title:** SmartCare
+- **Team Member:**
+  1. Tanakorn Kaewmai - Solo Developer / Full Stack & AI
+- **Originality Statement:** *All work in this repository is original and created specifically for the Frostbyte Hackathon.*
+- **Datasets Used:** Synthetically generated clinical data using `train_model.py` based on domain-informed distributions for vital signs and symptom patterns.
+- **External Libraries & Citations:**
+  - **Frontend:** Next.js, React 19, Tailwind CSS, Framer Motion (for UI animations)
+  - **Backend/Database:** Prisma ORM, PostgreSQL, JSON Web Tokens (`jose`)
+  - **AI & Data Science:** Python, FastAPI, scikit-learn (Random Forest Classifier)
+  - **PDF Export:** `react-to-print`
