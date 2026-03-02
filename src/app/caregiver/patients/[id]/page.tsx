@@ -378,17 +378,17 @@ export default function PatientDetailPage() {
                                                 disabled={page === 1}
                                                 className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-colors"
                                             >
-                                                {t("pagination.prev")}
+                                                {t("patient.dashboard.prev")}
                                             </button>
                                             <span className="text-sm text-gray-500">
-                                                {t("pagination.page")} {page} {t("pagination.of")} {totalPages}
+                                                {t("patient.dashboard.page")} {page} {t("patient.dashboard.of")} {totalPages}
                                             </span>
                                             <button
                                                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                                                 disabled={page === totalPages}
                                                 className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-colors"
                                             >
-                                                {t("pagination.next")}
+                                                {t("patient.dashboard.next")}
                                             </button>
                                         </div>
                                     )}
