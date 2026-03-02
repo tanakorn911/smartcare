@@ -43,6 +43,11 @@ export default function PatientDetailPage() {
     // Notes state
     const [noteText, setNoteText] = useState("");
     const [noteLoading, setNoteLoading] = useState(false);
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const recordsPerPage = 10;
+    const totalPages = Math.ceil((patient?.records.length || 0) / recordsPerPage);
+    const paginatedRecords = patient?.records.slice((page - 1) * recordsPerPage, page * recordsPerPage) || [];
 
     const fetchPatient = () => {
         if (!params.id) return;
@@ -351,7 +356,7 @@ export default function PatientDetailPage() {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {patient.records.slice(0, 10).map((r) => (
+                                                {paginatedRecords.map((r) => (
                                                     <tr key={r.id} className="border-b border-gray-100 last:border-0">
                                                         <td className="py-2.5 pr-4 text-gray-700">{new Date(r.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</td>
                                                         <td className="py-2.5 pr-4 text-gray-700">{r.temperature}°C</td>
@@ -364,6 +369,29 @@ export default function PatientDetailPage() {
                                             </tbody>
                                         </table>
                                     </div>
+
+                                    {/* Pagination Controls */}
+                                    {totalPages > 1 && (
+                                        <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
+                                            <button
+                                                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                                disabled={page === 1}
+                                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                                            >
+                                                {t("pagination.prev")}
+                                            </button>
+                                            <span className="text-sm text-gray-500">
+                                                {t("pagination.page")} {page} {t("pagination.of")} {totalPages}
+                                            </span>
+                                            <button
+                                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                                                disabled={page === totalPages}
+                                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                                            >
+                                                {t("pagination.next")}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
