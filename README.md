@@ -23,20 +23,20 @@ SmartCare provides a complete ecosystem for remote patient monitoring, designed 
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────┐
-│           Next.js Application           │
-│  ┌──────────┐  ┌─────────────────────┐  │
-│  │    UI     │  │  API Route Handlers │  │
-│  │ (React)   │  │  /api/auth          │  │
-│  │          │──▶│  /api/records        │  │
-│  │          │  │  /api/patients        │  │
-│  │          │  │  /api/predict ────────│──┼──▶  Python FastAPI
-│  └──────────┘  └─────────┬───────────┘  │      AI Service
-│                          │              │      POST /predict
-│                          ▼              │
-│                    PostgreSQL           │
-│                    (Prisma ORM)         │
-└─────────────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│           Next.js Application            │
+│  ┌──────────┐   ┌─────────────────────┐  │
+│  │    UI    │   │  API Route Handlers │  │
+│  │ (React)  │   │  /api/auth          │  │
+│  │          │──▶│  /api/records       │  │
+│  │          │   │  /api/patients      │  │
+│  │          │   │  /api/predict ──────│──┼──▶  Python FastAPI
+│  └──────────┘   └─────────┬───────────┘  │      AI Service
+│                           │              │      POST /predict
+│                           ▼              │
+│                      PostgreSQL          │
+│                     (Prisma ORM)         │
+└──────────────────────────────────────────┘
 ```
 
 ---
