@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  PATIENT
+  CAREGIVER
+}
+
+model User {
+  id       String   @id @default(cuid())
+  name     String
+  email    String   @unique
+  password String
+  role     Role
+  patient  Patient?
+}
+
+model Patient {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  age           Int
+  gender        String
+  user          User           @relation(fields: [userId], references: [id])
+  healthRecords HealthRecord[]
+  notes         Note[]
+}
+
+model HealthRecord {
+  id          String      @id @default(cuid())
+  patientId   String
+  date        DateTime    @default(now())
+  temperature Float
+  heartRate   Int
+  systolic    Int
+  diastolic   Int
+  symptom     String
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  prediction  Prediction?
+}
+
+model Prediction {
+  id             String       @id @default(cuid())
+  healthRecordId String       @unique
+  riskLevel      String
+  probability    Float
+  explanation    String       @default("")
+  createdAt      DateTime     @default(now())
+  healthRecord   HealthRecord @relation(fields: [healthRecordId], references: [id])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  patientId String
+  content   String
+  createdAt DateTime @default(now())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+}

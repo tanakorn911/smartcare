@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/src/generated/prisma
+
+# python & ai service
+*venv*
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+ai-service/*.pkl
+ai-service/*.csv
