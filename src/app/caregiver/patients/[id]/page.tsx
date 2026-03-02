@@ -91,6 +91,7 @@ export default function PatientDetailPage() {
     };
 
     const handleDeleteNote = async (noteId: string) => {
+        if (!window.confirm(t("mgmt.confirmDeleteNote"))) return;
         try {
             const res = await fetch(`/api/patients/${params.id}/notes`, {
                 method: "DELETE",
