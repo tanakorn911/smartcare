@@ -29,6 +29,9 @@ export const translations: Record<Locale, Record<string, string>> = {
         "patient.dashboard.noAssessment": "No assessment yet. Record your health data to get started.",
         "patient.dashboard.recordButton": "Record Today's Health Data",
         "patient.dashboard.recentRecords": "Recent Records",
+        "patient.dashboard.scoreTrend": "Health Score Trend",
+        "patient.dashboard.overallProgress": "Overall Progress",
+        "patient.dashboard.scoreDesc": "Track your 0-100 AI Health Score history",
         "patient.dashboard.loading": "Loading...",
         "patient.dashboard.prev": "Previous",
         "patient.dashboard.next": "Next",
@@ -130,6 +133,47 @@ export const translations: Record<Locale, Record<string, string>> = {
         "mgmt.confirmDeleteNote": "Are you sure you want to delete this note?",
         "mgmt.success": "Saved successfully",
         "mgmt.emailExists": "Email already exists",
+        "mgmt.criticalAlerts": "Critical Alerts",
+        "mgmt.allPatients": "All Patients",
+
+        // Analytics
+        "analytics.totalPatients": "Total Patients",
+        "analytics.highRisk": "High Risk",
+        "analytics.mediumRisk": "Medium Risk",
+        "analytics.lowRisk": "Low Risk",
+        "analytics.riskDistribution": "Risk Distribution",
+        "analytics.recentActivity": "Recent Activity",
+        "analytics.noData": "No Data",
+        "analytics.newRecord": "recorded health data",
+        "analytics.trendMissing": "No trend data available yet.",
+        "analytics.trendTitle": "📈 Risk Level Trend (14 Days)",
+        "analytics.trendDesc": "Daily count of patient risk assessments",
+
+        // SHAP / Health Score
+        "shap.title": "AI Analysis – Contributing Factors",
+        "shap.subtitle": "SHAP-based explanation of your risk assessment",
+        "shap.increasesRisk": "increases risk",
+        "shap.decreasesRisk": "decreases risk",
+        "healthScore.title": "Health Score",
+        "healthScore.outOf": "out of 100",
+
+        // Toast
+        "toast.newRecord": "New health record submitted",
+        "toast.byPatient": "by",
+
+        // Landing
+        "landing.howItWorks": "How It Works",
+        "landing.step1Title": "Record Vitals",
+        "landing.step1Desc": "Patients enter daily health measurements including temperature, heart rate, and blood pressure.",
+        "landing.step2Title": "AI Analyzes",
+        "landing.step2Desc": "Our Random Forest model with SHAP explainability assesses risk levels in real-time.",
+        "landing.step3Title": "Get Insights",
+        "landing.step3Desc": "Both patients and caregivers receive actionable insights with clear explanations.",
+        "landing.techStack": "Powered By",
+        "landing.stats.patients": "Patients Monitored",
+        "landing.stats.assessments": "AI Assessments",
+        "landing.stats.languages": "Languages",
+        "landing.stats.uptime": "Uptime",
     },
 
     th: {
@@ -160,6 +204,9 @@ export const translations: Record<Locale, Record<string, string>> = {
         "patient.dashboard.noAssessment": "ยังไม่มีผลประเมิน กรุณาบันทึกข้อมูลสุขภาพเพื่อเริ่มต้น",
         "patient.dashboard.recordButton": "บันทึกข้อมูลสุขภาพวันนี้",
         "patient.dashboard.recentRecords": "ประวัติล่าสุด",
+        "patient.dashboard.scoreTrend": "แนวโน้มคะแนนสุขภาพ",
+        "patient.dashboard.overallProgress": "ความคืบหน้าโดยรวม",
+        "patient.dashboard.scoreDesc": "ติดตามประวัติคะแนนสุขภาพ AI (0-100) ของคุณ",
         "patient.dashboard.loading": "กำลังโหลด...",
         "patient.dashboard.prev": "ก่อนหน้า",
         "patient.dashboard.next": "ถัดไป",
@@ -200,6 +247,19 @@ export const translations: Record<Locale, Record<string, string>> = {
         "caregiver.dashboard.viewDetail": "ดูรายละเอียด",
         "caregiver.dashboard.noPatients": "ยังไม่มีผู้ป่วยในระบบ",
         "caregiver.dashboard.years": "ปี",
+
+        // Analytics
+        "analytics.totalPatients": "ผู้ป่วยทั้งหมด",
+        "analytics.highRisk": "ความเสี่ยงสูง",
+        "analytics.mediumRisk": "ความเสี่ยงปานกลาง",
+        "analytics.lowRisk": "ความเสี่ยงต่ำ",
+        "analytics.riskDistribution": "สัดส่วนความเสี่ยง",
+        "analytics.recentActivity": "ความเคลื่อนไหวล่าสุด",
+        "analytics.noData": "ไม่มีข้อมูล",
+        "analytics.newRecord": "บันทึกข้อมูลสุขภาพ",
+        "analytics.trendMissing": "ยังไม่มีข้อมูลแนวโน้มสุขภาพ",
+        "analytics.trendTitle": "📈 แนวโน้มความเสี่ยง (14 วัน)",
+        "analytics.trendDesc": "สรุปจำนวนผู้ป่วยแยกตามระดับความเสี่ยงในแต่ละวัน",
 
         // Patient Detail
         "detail.backToList": "กลับไปรายชื่อผู้ป่วย",
@@ -261,5 +321,33 @@ export const translations: Record<Locale, Record<string, string>> = {
         "mgmt.confirmDeleteNote": "คุณแน่ใจหรือไม่ว่าต้องการลบข้อความนี้?",
         "mgmt.success": "บันทึกสำเร็จ",
         "mgmt.emailExists": "อีเมลนี้ถูกใช้แล้ว",
+        "mgmt.criticalAlerts": "แจ้งเตือนฉุกเฉิน",
+        "mgmt.allPatients": "ผู้ป่วยทั้งหมด",
+
+        // SHAP / Health Score
+        "shap.title": "AI วิเคราะห์ – ปัจจัยที่ส่งผล",
+        "shap.subtitle": "คำอธิบายจาก SHAP ว่าทำไมคุณถึงได้ระดับความเสี่ยงนี้",
+        "shap.increasesRisk": "เพิ่มความเสี่ยง",
+        "shap.decreasesRisk": "ลดความเสี่ยง",
+        "healthScore.title": "คะแนนสุขภาพ",
+        "healthScore.outOf": "จาก 100",
+
+        // Toast
+        "toast.newRecord": "มีข้อมูลสุขภาพใหม่",
+        "toast.byPatient": "โดย",
+
+        // Landing
+        "landing.howItWorks": "ทำงานอย่างไร",
+        "landing.step1Title": "บันทึกค่าสุขภาพ",
+        "landing.step1Desc": "ผู้ป่วยกรอกค่าสุขภาพประจำวัน ได้แก่ อุณหภูมิ อัตราการเต้นหัวใจ และความดันโลหิต",
+        "landing.step2Title": "AI วิเคราะห์",
+        "landing.step2Desc": "โมเดล Random Forest พร้อม SHAP จะประเมินระดับความเสี่ยงแบบเรียลไทม์",
+        "landing.step3Title": "รับผลลัพธ์",
+        "landing.step3Desc": "ทั้งผู้ป่วยและผู้ดูแลจะได้รับผลวิเคราะห์พร้อมคำอธิบายที่เข้าใจง่าย",
+        "landing.techStack": "เทคโนโลยีที่ใช้",
+        "landing.stats.patients": "ผู้ป่วยที่ดูแล",
+        "landing.stats.assessments": "การประเมิน AI",
+        "landing.stats.languages": "ภาษา",
+        "landing.stats.uptime": "ความพร้อมใช้งาน",
     },
 };

@@ -58,5 +58,7 @@ export const config = {
         "/api/patients/:path*",
         "/api/predict",
         "/api/predict/:path*",
+        "/api/analytics",
+        "/api/analytics/:path*",
     ],
 };
