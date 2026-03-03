@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Navbar from "@/components/Navbar";
 import RiskBadge from "@/components/RiskBadge";
+import RiskTrendChart from "@/components/RiskTrendChart";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PatientSummary {
     id: string; name: string; email: string; age: number; gender: string;
@@ -23,15 +25,37 @@ export default function CaregiverDashboard() {
     const [addForm, setAddForm] = useState({ name: "", email: "", password: "", age: "", gender: "Male" });
     const [addLoading, setAddLoading] = useState(false);
     const [addError, setAddError] = useState("");
+    const [trendData, setTrendData] = useState<any[]>([]);
 
-    const fetchPatients = () => {
-        fetch("/api/patients")
-            .then((res) => res.json())
-            .then((data) => { setPatients(data); setLoading(false); })
+    // Toast notification state
+    const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
+    const [prevPatientCount, setPrevPatientCount] = useState<number | null>(null);
+
+    const fetchPatients = useCallback(() => {
+        Promise.all([
+            fetch("/api/patients").then(res => res.json()),
+            fetch("/api/analytics").then(res => res.json())
+        ])
+            .then(([patientsData, analyticsData]) => {
+                if (prevPatientCount !== null && Array.isArray(patientsData) && patientsData.length > prevPatientCount) {
+                    setToast({ message: t("toast.newRecord"), visible: true });
+                    setTimeout(() => setToast({ message: "", visible: false }), 4000);
+                }
+                setPrevPatientCount(Array.isArray(patientsData) ? patientsData.length : 0);
+                setPatients(Array.isArray(patientsData) ? patientsData : []);
+                setTrendData(Array.isArray(analyticsData) ? analyticsData : []);
+                setLoading(false);
+            })
             .catch(() => setLoading(false));
-    };
+    }, [prevPatientCount, t]);
 
     useEffect(() => { fetchPatients(); }, []);
+
+    // Polling every 30 seconds
+    useEffect(() => {
+        const interval = setInterval(fetchPatients, 30000);
+        return () => clearInterval(interval);
+    }, [fetchPatients]);
 
     const sorted = [...patients].sort((a, b) => {
         if (sortBy === "risk") {
@@ -39,6 +63,19 @@ export default function CaregiverDashboard() {
         }
         return a.name.localeCompare(b.name);
     });
+
+    // Analytics
+    const highCount = patients.filter(p => p.latestRiskLevel === "high").length;
+    const mediumCount = patients.filter(p => p.latestRiskLevel === "medium").length;
+    const lowCount = patients.filter(p => p.latestRiskLevel === "low").length;
+    const noDataCount = patients.filter(p => !p.latestRiskLevel).length;
+    const total = patients.length;
+
+    // Pie chart percentages (calculated only from patients with assessments)
+    const totalAssessed = highCount + mediumCount + lowCount;
+    const highPct = totalAssessed > 0 ? (highCount / totalAssessed) * 100 : 0;
+    const mediumPct = totalAssessed > 0 ? (mediumCount / totalAssessed) * 100 : 0;
+    const lowPct = totalAssessed > 0 ? (lowCount / totalAssessed) * 100 : 0;
 
     const handleAddPatient = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,9 +98,38 @@ export default function CaregiverDashboard() {
         } catch { setAddError("Error"); } finally { setAddLoading(false); }
     };
 
+    // Conic gradient for pie chart
+    const conicGradient = total > 0
+        ? `conic-gradient(
+            #ef4444 0% ${highPct}%,
+            #f59e0b ${highPct}% ${highPct + mediumPct}%,
+            #22c55e ${highPct + mediumPct}% ${highPct + mediumPct + lowPct}%,
+            #cbd5e1 ${highPct + mediumPct + lowPct}% 100%
+        )`
+        : "conic-gradient(#e2e8f0 0% 100%)";
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Navbar />
+
+            {/* Toast Notification */}
+            <AnimatePresence>
+                {toast.visible && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -50, x: "-50%" }}
+                        animate={{ opacity: 1, y: 0, x: "-50%" }}
+                        exit={{ opacity: 0, y: -50, x: "-50%" }}
+                        className="fixed top-20 left-1/2 z-50 bg-blue-600 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3"
+                    >
+                        <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                        </span>
+                        {toast.message}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             <main className="max-w-4xl mx-auto px-4 py-8">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -89,10 +155,84 @@ export default function CaregiverDashboard() {
                     </div>
                 </div>
 
+                {/* ── Analytics Summary Cards ── */}
+                {!loading && patients.length > 0 && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4 }}
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
+                    >
+                        {/* Total */}
+                        <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl border border-gray-100 p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-all flex flex-col justify-between">
+                            <p className="text-sm font-medium text-gray-500 mb-1">{t("analytics.totalPatients")}</p>
+                            <div className="flex items-end justify-between mt-2">
+                                <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-700 to-gray-900">{total}</p>
+                                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">👥</div>
+                            </div>
+                        </div>
+                        {/* High Risk */}
+                        <div className="bg-gradient-to-br from-red-50 to-white rounded-2xl border border-red-100 p-5 shadow-[0_4px_20px_-4px_rgba(239,68,68,0.1)] hover:shadow-[0_8px_30px_-4px_rgba(239,68,68,0.2)] transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-red-400 opacity-10 rounded-full -mr-8 -mt-8"></div>
+                            <p className="text-sm font-medium text-red-600 mb-1">{t("analytics.highRisk")}</p>
+                            <div className="flex items-end justify-between mt-2">
+                                <p className="text-4xl font-bold text-red-600">{highCount}</p>
+                                <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500">🚨</div>
+                            </div>
+                        </div>
+                        {/* Medium Risk */}
+                        <div className="bg-gradient-to-br from-amber-50 to-white rounded-2xl border border-amber-100 p-5 shadow-[0_4px_20px_-4px_rgba(245,158,11,0.1)] hover:shadow-[0_8px_30px_-4px_rgba(245,158,11,0.2)] transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400 opacity-10 rounded-full -mr-8 -mt-8"></div>
+                            <p className="text-sm font-medium text-amber-600 mb-1">{t("analytics.mediumRisk")}</p>
+                            <div className="flex items-end justify-between mt-2">
+                                <p className="text-4xl font-bold text-amber-600">{mediumCount}</p>
+                                <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-500">⚠️</div>
+                            </div>
+                        </div>
+                        {/* Low Risk */}
+                        <div className="bg-gradient-to-br from-emerald-50 to-white rounded-2xl border border-emerald-100 p-5 shadow-[0_4px_20px_-4px_rgba(16,185,129,0.1)] hover:shadow-[0_8px_30px_-4px_rgba(16,185,129,0.2)] transition-all flex flex-col justify-between relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-400 opacity-10 rounded-full -mr-8 -mt-8"></div>
+                            <p className="text-sm font-medium text-emerald-600 mb-1">{t("analytics.lowRisk")}</p>
+                            <div className="flex items-end justify-between mt-2">
+                                <p className="text-4xl font-bold text-emerald-600">{lowCount}</p>
+                                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-500">✅</div>
+                            </div>
+                        </div>
+                        {/* Line Chart & Pie Chart */}
+                        <div className="col-span-2 lg:col-span-4 grid grid-cols-1 lg:grid-cols-3 gap-4 mt-2">
+                            <div className="lg:col-span-2 h-[400px]">
+                                <RiskTrendChart data={trendData} />
+                            </div>
+                            <div className="bg-gradient-to-b from-white to-gray-50 rounded-2xl border border-gray-100 p-6 flex flex-col items-center justify-center gap-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-all h-[400px]">
+                                <p className="text-gray-800 font-semibold mb-2">{t("analytics.riskDistribution")}</p>
+                                <div className="relative">
+                                    <div
+                                        className="w-36 h-36 rounded-full shadow-inner"
+                                        style={{ background: conicGradient }}
+                                    />
+                                    <div className="absolute inset-0 m-auto w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center flex-col">
+                                        <span className="text-xs text-gray-400 font-medium">Total</span>
+                                        <span className="text-lg font-bold text-gray-800">{total}</span>
+                                    </div>
+                                </div>
+                                <div className="w-full flex justify-center gap-4 text-xs font-medium text-gray-600 mt-2">
+                                    <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-sm shadow-red-200"></span>{Math.round(highPct)}% High</div>
+                                    <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-sm shadow-amber-200"></span>{Math.round(mediumPct)}% Med</div>
+                                    <div className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200"></span>{Math.round(lowPct)}% Low</div>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
                 {/* Add Patient Modal */}
                 {showAdd && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
-                        <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl"
+                        >
                             <h2 className="text-lg font-bold text-gray-900 mb-4">{t("mgmt.addPatient")}</h2>
                             {addError && <div className="mb-3 p-2 rounded-lg bg-red-50 text-red-600 text-sm">{addError}</div>}
                             <form onSubmit={handleAddPatient} className="space-y-4">
@@ -137,7 +277,7 @@ export default function CaregiverDashboard() {
                                     </button>
                                 </div>
                             </form>
-                        </div>
+                        </motion.div>
                     </div>
                 )}
 
@@ -161,7 +301,12 @@ export default function CaregiverDashboard() {
                                 </h2>
                                 <div className="space-y-3">
                                     {sorted.filter(p => p.latestRiskLevel === "high").map((patient) => (
-                                        <div key={`alert-${patient.id}`} className="bg-red-50 rounded-2xl border-2 border-red-200 p-5 hover:shadow-md transition-shadow">
+                                        <motion.div
+                                            key={`alert-${patient.id}`}
+                                            initial={{ opacity: 0, x: -20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            className="bg-red-50 rounded-2xl border-2 border-red-200 p-5 hover:shadow-md transition-shadow"
+                                        >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-12 bg-red-200 text-red-700 rounded-full flex items-center justify-center">
@@ -180,7 +325,7 @@ export default function CaregiverDashboard() {
                                                     </Link>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </motion.div>
                                     ))}
                                 </div>
                             </div>
@@ -190,8 +335,14 @@ export default function CaregiverDashboard() {
                         <div>
                             <h2 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-3">{t("mgmt.allPatients")}</h2>
                             <div className="space-y-3">
-                                {sorted.map((patient) => (
-                                    <div key={patient.id} className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                                {sorted.map((patient, idx) => (
+                                    <motion.div
+                                        key={patient.id}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: idx * 0.03 }}
+                                        className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
+                                    >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-4">
                                                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
@@ -210,7 +361,7 @@ export default function CaregiverDashboard() {
                                                 </Link>
                                             </div>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                         </div>
