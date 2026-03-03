@@ -2,7 +2,31 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Activity, ShieldCheck, HeartPulse, BrainCircuit, Globe2, ArrowRight } from "lucide-react";
+import { Activity, ShieldCheck, HeartPulse, BrainCircuit, Globe2, ArrowRight, ClipboardList, Sparkles, BarChart3 } from "lucide-react";
+
+const stats = [
+    { value: "500+", label: "landing.stats.patients", icon: HeartPulse },
+    { value: "2,000+", label: "landing.stats.assessments", icon: BrainCircuit },
+    { value: "2", label: "landing.stats.languages", icon: Globe2 },
+    { value: "99.9%", label: "landing.stats.uptime", icon: Activity },
+];
+
+const steps = [
+    { icon: ClipboardList, color: "bg-blue-100 text-blue-600", titleKey: "landing.step1Title", descKey: "landing.step1Desc", number: "01" },
+    { icon: BrainCircuit, color: "bg-purple-100 text-purple-600", titleKey: "landing.step2Title", descKey: "landing.step2Desc", number: "02" },
+    { icon: BarChart3, color: "bg-emerald-100 text-emerald-600", titleKey: "landing.step3Title", descKey: "landing.step3Desc", number: "03" },
+];
+
+const techStack = [
+    { name: "Next.js 16", desc: "React Framework" },
+    { name: "React 19", desc: "UI Library" },
+    { name: "Python FastAPI", desc: "AI Backend" },
+    { name: "PostgreSQL", desc: "Database" },
+    { name: "Prisma ORM", desc: "Data Layer" },
+    { name: "scikit-learn", desc: "ML Model" },
+    { name: "SHAP", desc: "Explainable AI" },
+    { name: "Tailwind CSS", desc: "Styling" },
+];
 
 export default function LandingClient() {
     return (
@@ -45,10 +69,13 @@ export default function LandingClient() {
                         className="flex items-center justify-center gap-2 mb-6"
                     >
                         <span className="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 rounded-full border border-blue-200">
-                            Frostbyte Hackathon
+                            Frostbyte Hackathon 2026
                         </span>
                         <span className="px-3 py-1 text-xs font-semibold bg-emerald-100 text-emerald-700 rounded-full border border-emerald-200">
-                            Best Health & AI
+                            Healthcare & BioTech
+                        </span>
+                        <span className="px-3 py-1 text-xs font-semibold bg-purple-100 text-purple-700 rounded-full border border-purple-200">
+                            Explainable AI
                         </span>
                     </motion.div>
 
@@ -70,7 +97,8 @@ export default function LandingClient() {
                         transition={{ duration: 0.5, delay: 0.2 }}
                         className="text-lg sm:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed"
                     >
-                        Empowering caregivers with predictive AI risk assessments and enabling patients to easily track their daily health vitals with multi-language support.
+                        Empowering caregivers with <strong>SHAP-powered Explainable AI</strong> risk assessments
+                        and enabling patients to easily track their daily health vitals with multi-language support.
                     </motion.p>
 
                     <motion.div
@@ -91,8 +119,28 @@ export default function LandingClient() {
                 </div>
             </div>
 
+            {/* Stats Section */}
+            <div className="bg-white py-12 border-t border-b border-slate-100">
+                <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8">
+                    {stats.map((stat, i) => (
+                        <motion.div
+                            key={stat.label}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, delay: i * 0.1 }}
+                            className="text-center"
+                        >
+                            <stat.icon className="w-6 h-6 text-blue-500 mx-auto mb-2" />
+                            <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                            <p className="text-sm text-slate-500 mt-1">{stat.label.split('.').pop()?.replace(/([A-Z])/g, ' $1').trim()}</p>
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+
             {/* Features Section */}
-            <div className="bg-white py-24 sm:py-32 relative z-10 border-t border-slate-100">
+            <div className="bg-white py-24 sm:py-32 relative z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-16">
                         <h2 className="text-3xl font-bold text-slate-900">Why SmartCare?</h2>
@@ -110,9 +158,9 @@ export default function LandingClient() {
                             <div className="bg-blue-100 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
                                 <BrainCircuit className="w-6 h-6 text-blue-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">Explainable AI</h3>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">SHAP Explainable AI</h3>
                             <p className="text-slate-600 leading-relaxed">
-                                Machine learning model that not only predicts health risks (Low/Medium/High) but provides human-readable explanations.
+                                Not just predictions — our model uses <strong>SHAP (SHapley Additive exPlanations)</strong> to show exactly which health factors contribute to each risk assessment.
                             </p>
                         </motion.div>
 
@@ -126,9 +174,9 @@ export default function LandingClient() {
                             <div className="bg-emerald-100 w-12 h-12 rounded-xl flex items-center justify-center mb-6">
                                 <ShieldCheck className="w-6 h-6 text-emerald-600" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 mb-3">Caregiver Tools</h3>
+                            <h3 className="text-xl font-bold text-slate-900 mb-3">Caregiver Command Center</h3>
                             <p className="text-slate-600 leading-relaxed">
-                                Centralized dashboard to monitor multiple patients, write clinical notes, and prioritize care based on urgency.
+                                Real-time analytics dashboard with risk distribution charts, critical alerts, and patient management tools all in one place.
                             </p>
                         </motion.div>
 
@@ -144,28 +192,107 @@ export default function LandingClient() {
                             </div>
                             <h3 className="text-xl font-bold text-slate-900 mb-3">Bilingual (EN & TH)</h3>
                             <p className="text-slate-600 leading-relaxed">
-                                Fully localized interface for Thai and English users, including AI-generated medical explanations and UI elements.
+                                Fully localized interface for Thai and English users, including AI-generated medical explanations and all UI elements.
                             </p>
                         </motion.div>
                     </div>
                 </div>
             </div>
 
-            {/* CTA Section */}
-            <div className="bg-blue-600 py-16 sm:py-24 relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-                <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-                    <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Start Monitoring Today</h2>
-                    <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-                        Experience the future of remote patient monitoring powered by artificial intelligence.
-                    </p>
-                    <Link href="/login" className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-2xl text-lg font-bold hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all shadow-2xl">
-                        Go to Login
-                        <ArrowRight className="w-5 h-5" />
-                    </Link>
+            {/* How It Works Section */}
+            <div className="bg-slate-50 py-24 relative">
+                <div className="max-w-5xl mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-slate-900">How It Works</h2>
+                        <p className="mt-4 text-lg text-slate-500">Three simple steps to AI-powered health insights</p>
+                    </div>
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {steps.map((step, i) => (
+                            <motion.div
+                                key={step.number}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: i * 0.15 }}
+                                className="relative"
+                            >
+                                <div className="bg-white rounded-3xl p-8 border border-slate-100 hover:shadow-lg transition-shadow h-full">
+                                    <span className="text-5xl font-black text-slate-100 absolute top-4 right-6">{step.number}</span>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 ${step.color}`}>
+                                        <step.icon className="w-6 h-6" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-slate-900 mb-3">{step.titleKey.split('.').pop()?.replace(/([A-Z])/g, ' $1').trim()}</h3>
+                                    <p className="text-slate-600 leading-relaxed">{step.descKey.split('.').pop()}</p>
+                                </div>
+                                {i < steps.length - 1 && (
+                                    <div className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
+                                        <ArrowRight className="w-8 h-8 text-slate-300" />
+                                    </div>
+                                )}
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
+            {/* Tech Stack Section */}
+            <div className="bg-white py-20 border-t border-slate-100">
+                <div className="max-w-5xl mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-bold text-slate-900">Powered By</h2>
+                        <p className="mt-4 text-lg text-slate-500">Modern, proven technologies for reliability and performance</p>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {techStack.map((tech, i) => (
+                            <motion.div
+                                key={tech.name}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.3, delay: i * 0.05 }}
+                                className="bg-slate-50 rounded-2xl p-5 border border-slate-100 text-center hover:shadow-md hover:border-blue-200 transition-all"
+                            >
+                                <p className="font-bold text-slate-900">{tech.name}</p>
+                                <p className="text-xs text-slate-500 mt-1">{tech.desc}</p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 py-16 sm:py-24 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
+                {/* Decorative circles */}
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-500/30 rounded-full blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl" />
+                <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        <Sparkles className="w-10 h-10 text-blue-200 mx-auto mb-4" />
+                        <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">Start Monitoring Today</h2>
+                        <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+                            Experience the future of remote patient monitoring powered by SHAP Explainable AI.
+                        </p>
+                        <Link href="/login" className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-2xl text-lg font-bold hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all shadow-2xl">
+                            Go to Login
+                            <ArrowRight className="w-5 h-5" />
+                        </Link>
+                    </motion.div>
+                </div>
+            </div>
+
+            {/* Footer */}
+            <div className="bg-slate-900 py-8 text-center">
+                <p className="text-slate-400 text-sm">
+                    Built with ❤️ for <span className="text-blue-400 font-semibold">Frostbyte Hackathon 2026</span> •
+                    Healthcare & BioTech Theme •
+                    By Tanakorn Kaewmai
+                </p>
+            </div>
         </div>
     );
 }
