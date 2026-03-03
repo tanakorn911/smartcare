@@ -26,6 +26,7 @@ SmartCare provides a complete ecosystem for remote patient monitoring:
 
 ## 🏗️ System Architecture
 
+<<<<<<< HEAD
 ```mermaid
 graph TB
     subgraph "Next.js Application"
@@ -48,6 +49,23 @@ graph TB
     API -->|"POST /predict"| FA
     FA --> ML
     FA --> SH
+=======
+```
+┌──────────────────────────────────────────┐
+│           Next.js Application            │
+│  ┌──────────┐   ┌─────────────────────┐  │
+│  │    UI    │   │  API Route Handlers │  │
+│  │ (React)  │   │  /api/auth          │  │
+│  │          │──▶│  /api/records       │  │
+│  │          │   │  /api/patients      │  │
+│  │          │   │  /api/predict ──────│──┼──▶  Python FastAPI
+│  └──────────┘   └─────────┬───────────┘  │      AI Service
+│                           │              │      POST /predict
+│                           ▼              │
+│                      PostgreSQL          │
+│                     (Prisma ORM)         │
+└──────────────────────────────────────────┘
+>>>>>>> 8a99134b4827efed6000099f1b45008b27f51373
 ```
 
 ---
