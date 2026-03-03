@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import RiskBadge from "@/components/RiskBadge";
 import ChartPanel from "@/components/ChartPanel";
+import HealthScoreChart from "@/components/HealthScoreChart";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 
@@ -12,7 +13,7 @@ interface PatientData {
     latestExplanation: string | null;
     records: Array<{
         date: string; temperature: number; heartRate: number;
-        systolic: number; diastolic: number; symptom: string; riskLevel: string | null;
+        systolic: number; diastolic: number; symptom: string; riskLevel: string | null; probability: number | null;
     }>;
 }
 
@@ -42,6 +43,18 @@ export default function PatientDashboard() {
     const totalPages = data?.records ? Math.ceil(data.records.length / ITEMS_PER_PAGE) : 0;
     const startIndex = (page - 1) * ITEMS_PER_PAGE;
     const paginatedRecords = data?.records?.slice(startIndex, startIndex + ITEMS_PER_PAGE) || [];
+
+    // Helper to compute Health Score identically to backend
+    const computeScore = (risk: string | null, prob: number | null) => {
+        if (!risk || prob === null) return 0;
+        if (risk === "low") return Math.min(100, Math.round(70 + prob * 30));
+        if (risk === "medium") return Math.max(30, Math.round(60 - prob * 20));
+        return Math.max(5, Math.round(30 - prob * 25));
+    };
+
+    const scoreData = data?.records
+        ? data.records.slice(0, 14).reverse().map(r => ({ date: r.date, score: computeScore(r.riskLevel, r.probability) }))
+        : [];
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -82,9 +95,12 @@ export default function PatientDashboard() {
                         </Link>
 
                         {data?.records && data.records.length > 0 && (
-                            <ChartPanel data={data.records.slice(0, 14).reverse().map((r) => ({
-                                date: r.date, temperature: r.temperature, heartRate: r.heartRate, systolic: r.systolic, diastolic: r.diastolic,
-                            }))} />
+                            <>
+                                <HealthScoreChart data={scoreData} />
+                                <ChartPanel data={data.records.slice(0, 14).reverse().map((r) => ({
+                                    date: r.date, temperature: r.temperature, heartRate: r.heartRate, systolic: r.systolic, diastolic: r.diastolic,
+                                }))} />
+                            </>
                         )}
 
                         {data?.records && data.records.length > 0 && (

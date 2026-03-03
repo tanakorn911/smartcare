@@ -37,11 +37,20 @@ export default function ChartPanel({ data }: ChartPanelProps) {
 
     const formatted = data.map((d) => ({
         ...d,
-        date: new Date(d.date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-        }),
+        fullDate: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }),
+        shortDate: new Date(d.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        displayDate: "",
     }));
+
+    let lastSeenDate = "";
+    formatted.forEach((item) => {
+        if (item.shortDate !== lastSeenDate) {
+            item.displayDate = item.shortDate;
+            lastSeenDate = item.shortDate;
+        } else {
+            item.displayDate = new Date(item.date).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        }
+    });
 
     return (
         <div className="rounded-2xl border border-gray-200 bg-white p-6">
@@ -51,7 +60,7 @@ export default function ChartPanel({ data }: ChartPanelProps) {
             <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={formatted}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="date" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                    <XAxis dataKey="displayDate" tick={{ fontSize: 12 }} stroke="#9ca3af" interval="preserveStartEnd" />
                     <YAxis tick={{ fontSize: 12 }} stroke="#9ca3af" />
                     <Tooltip
                         contentStyle={{
@@ -59,6 +68,7 @@ export default function ChartPanel({ data }: ChartPanelProps) {
                             border: "1px solid #e5e7eb",
                             boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                         }}
+                        labelFormatter={(_label, payload) => payload?.[0]?.payload?.fullDate || _label}
                     />
                     <Legend />
                     <Line type="monotone" dataKey="heartRate" stroke="#ef4444" name={t("chart.heartRate")} strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 5 }} />
