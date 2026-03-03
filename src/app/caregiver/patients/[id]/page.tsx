@@ -143,12 +143,25 @@ export default function PatientDetailPage() {
                         {/* Hidden Print UI */}
                         <div style={{ display: "none" }}>
                             <div ref={printRef} className="p-8 bg-white text-black font-sans">
+                                <style>{`
+                                    @page {
+                                        margin: 20mm 15mm 20mm 15mm;
+                                    }
+                                    @media print {
+                                        .print-section {
+                                            page-break-inside: avoid;
+                                        }
+                                        table { page-break-inside: auto; }
+                                        tr { page-break-inside: avoid; page-break-after: auto; }
+                                        thead { display: table-header-group; }
+                                    }
+                                `}</style>
                                 <div className="text-center mb-8 border-b-2 border-gray-800 pb-4">
                                     <h1 className="text-3xl font-bold uppercase tracking-wider text-gray-900 mb-2">{t("mgmt.exportReport")}</h1>
                                     <p className="text-gray-500">{t("detail.date")}: {new Date().toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                 </div>
 
-                                <div className="mb-8">
+                                <div className="mb-8 print-section">
                                     <h2 className="text-lg font-bold bg-gray-100 p-2 mb-3 text-gray-800 uppercase tracking-wider">{t("mgmt.patientInfo")}</h2>
                                     <div className="grid grid-cols-2 gap-4 text-sm">
                                         <div><span className="font-semibold text-gray-600">{t("mgmt.name")}:</span> <span className="text-gray-900">{patient.name}</span></div>
@@ -159,7 +172,7 @@ export default function PatientDetailPage() {
                                 </div>
 
                                 {patient.latestExplanation && (
-                                    <div className="mb-8">
+                                    <div className="mb-8 print-section">
                                         <h2 className="text-lg font-bold bg-gray-100 p-2 mb-3 text-gray-800 uppercase tracking-wider">{t("form.healthStatus")} / AI Assessment</h2>
                                         <div className="flex items-center gap-2 mb-2">
                                             <span className="font-semibold text-gray-600">{t("detail.risk")}:</span>
@@ -170,7 +183,7 @@ export default function PatientDetailPage() {
                                 )}
 
                                 {patient.records.length > 0 && (
-                                    <div className="mb-8">
+                                    <div className="mb-8 print-section">
                                         <h2 className="text-lg font-bold bg-gray-100 p-2 mb-3 text-gray-800 uppercase tracking-wider">{t("detail.healthRecords")}</h2>
                                         <table className="w-full text-sm border-collapse border border-gray-300">
                                             <thead>
@@ -200,7 +213,7 @@ export default function PatientDetailPage() {
                                 )}
 
                                 {patient.notes.length > 0 && (
-                                    <div className="mb-8">
+                                    <div className="mb-8 print-section">
                                         <h2 className="text-lg font-bold bg-gray-100 p-2 mb-3 text-gray-800 uppercase tracking-wider">{t("mgmt.notes")}</h2>
                                         <div className="space-y-3">
                                             {patient.notes.map((note) => (
