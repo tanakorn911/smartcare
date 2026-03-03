@@ -20,36 +20,13 @@ SmartCare provides a complete ecosystem for remote patient monitoring:
 - **For Caregivers**: A **Command Center** dashboard featuring analytics summary cards, risk distribution charts, critical alerts, and patient management tools.
 - **Real-World Utility**: Caregivers can generate and download **PDF Medical Reports** to share with doctors.
 - **Bilingual & Accessible**: Beautifully animated UI (Framer Motion) fully localized in **English and Thai** (��/��).
+- **Bilingual & Accessible**: Beautifully animated UI (Framer Motion) fully localized in **English and Thai** (/).
 - **Real-time Monitoring**: Automatic polling with toast notifications when new health data arrives.
 
 ---
 
 ## 🏗️ System Architecture
 
-<<<<<<< HEAD
-```mermaid
-graph TB
-    subgraph "Next.js Application"
-        UI["React UI<br/>(Framer Motion)"]
-        API["API Routes<br/>/api/auth, /api/records<br/>/api/patients, /api/predict"]
-        MW["Middleware<br/>(JWT Auth)"]
-    end
-    
-    subgraph "Python AI Service"
-        FA["FastAPI Server"]
-        ML["Random Forest<br/>Classifier"]
-        SH["SHAP<br/>TreeExplainer"]
-    end
-    
-    DB[(PostgreSQL<br/>Prisma ORM)]
-    
-    UI --> API
-    API --> MW
-    API --> DB
-    API -->|"POST /predict"| FA
-    FA --> ML
-    FA --> SH
-=======
 ```
 ┌──────────────────────────────────────────┐
 │           Next.js Application            │
@@ -65,7 +42,6 @@ graph TB
 │                      PostgreSQL          │
 │                     (Prisma ORM)         │
 └──────────────────────────────────────────┘
->>>>>>> 8a99134b4827efed6000099f1b45008b27f51373
 ```
 
 ---
