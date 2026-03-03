@@ -1,0 +1,61 @@
+{
+  "selected_model": "Random Forest",
+  "dataset_size": 2000,
+  "test_size": 400,
+  "feature_names": [
+    "temperature",
+    "heart_rate",
+    "systolic",
+    "diastolic",
+    "symptom"
+  ],
+  "feature_importance": {
+    "temperature": 0.39352211301990564,
+    "heart_rate": 0.19126575148062538,
+    "systolic": 0.21547187254846378,
+    "diastolic": 0.12937338742360424,
+    "symptom": 0.07036687552740109
+  },
+  "model_comparison": {
+    "Random Forest": {
+      "accuracy": 0.9775,
+      "f1_score": 0.9776,
+      "cv_mean": 0.9688,
+      "cv_std": 0.0086
+    },
+    "XGBoost": {
+      "accuracy": 0.9725,
+      "f1_score": 0.9726,
+      "cv_mean": 0.9719,
+      "cv_std": 0.0091
+    },
+    "Logistic Regression": {
+      "accuracy": 0.9675,
+      "f1_score": 0.9675,
+      "cv_mean": 0.9656,
+      "cv_std": 0.0163
+    }
+  },
+  "confusion_matrix": [
+    [
+      205,
+      3,
+      0
+    ],
+    [
+      3,
+      113,
+      0
+    ],
+    [
+      0,
+      3,
+      73
+    ]
+  ],
+  "classes": [
+    "low",
+    "medium",
+    "high"
+  ]
+}

@@ -66,6 +66,8 @@ export async function POST(request: NextRequest) {
             riskLevel: saved.riskLevel,
             probability: saved.probability,
             explanation: saved.explanation,
+            shapContributions: prediction.shap_contributions || null,
+            healthScore: prediction.health_score || null,
         });
     } catch (error) {
         console.error("Predict error:", error);
@@ -125,5 +127,5 @@ function fallbackPrediction(record: {
             "Health indicators are within the normal range. Continue regular monitoring.";
     }
 
-    return { risk_level, probability, explanation };
+    return { risk_level, probability, explanation, shap_contributions: null, health_score: null };
 }
