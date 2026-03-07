@@ -18,6 +18,7 @@ async function main() {
     // Clear existing data
     await prisma.prediction.deleteMany();
     await prisma.healthRecord.deleteMany();
+    await prisma.note.deleteMany();
     await prisma.patient.deleteMany();
     await prisma.user.deleteMany();
 
